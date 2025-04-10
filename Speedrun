@@ -1,0 +1,156 @@
+--!nocheck
+
+--// Variables
+local Speaker = game:GetService("Players").LocalPlayer
+local RunService = game:GetService("RunService")
+local CollectionService = game:GetService("CollectionService")
+
+local Character = Speaker.Character or Speaker.CharacterAdded:Wait()
+local Rooms = workspace.GeneratedRooms
+local Client = Speaker.PlayerGui.NotBrokenUI.CLIENT_MAIN.CLIENT
+
+--// Current Room UI //
+local MainUI = Instance.new("ScreenGui", game:GetService("CoreGui"))
+MainUI.DisplayOrder = 2^31 - 1
+
+local SpeedRunLabel = Instance.new("TextLabel", MainUI) do
+	SpeedRunLabel.TextColor3 = Color3.new(1, 1, 1)
+	SpeedRunLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+	SpeedRunLabel.BackgroundTransparency = 0.25
+	SpeedRunLabel.BackgroundColor3 = Color3.new(0.05, 0.06, 0.09)
+	SpeedRunLabel.BorderColor3 = Color3.new(0.12, 0.43, 0.92)
+	SpeedRunLabel.BorderMode = Enum.BorderMode.Outline
+	SpeedRunLabel.Size = UDim2.new(0.16, 0, 0.12, 0)
+	SpeedRunLabel.Position = UDim2.new(0.5, 0, 0, 0)
+	SpeedRunLabel.AnchorPoint = Vector2.new(0.5, 0)
+	SpeedRunLabel.TextScaled = true
+	SpeedRunLabel.Text = "Wating...\n0s"
+end
+
+--// Step Connection
+local Events = game:GetService("ReplicatedStorage").Events
+local FiredPrompts = {}
+local SpeedRunStart = os.clock()
+local Connection
+
+Connection = RunService.RenderStepped:Connect(function()
+    local Lighting = game:GetService("Lighting")
+    Lighting.OutdoorAmbient = Color3.new(0.5, 0.5, 0.5)
+    Lighting.Brightness = 2
+    Lighting.GlobalShadows = false
+    Lighting.Atmosphere.Density = 0
+
+    local RoomNumbers = {}
+
+    for _, Room in Rooms:GetChildren() do
+        CollectionService:RemoveTag(Room, "DarkRoom")
+
+        local Number = Room.Name:gsub("Room", "")
+        table.insert(RoomNumbers, tonumber(Number))
+    end
+
+    local LastRoom = math.max(unpack(RoomNumbers)) - 1
+
+    if not Character then return end
+
+    for _, Object in Character:GetChildren() do
+        if Object:IsA("BasePart") then
+            Object.Transparency = 0.8
+        end
+    end
+
+    for _, Room in Rooms:GetChildren() do
+        if Room.Name == "Room195" then
+            Events.TheObservatory.BeatPuzzle:FireServer()
+        end
+
+        local Door = Room:FindFirstChild("Door") or Room:FindFirstChild("DoorNormal")
+        local Scriptable = Room:FindFirstChild("Scriptable")
+        local Hitbox = (Door and Door:FindFirstChild("Hitbox")) or (Scriptable and Scriptable:FindFirstChild("Trigger"))
+        local Lever = Room:FindFirstChild("CaveLever")
+        local Prompt = Lever and Lever.ProximityPrompt
+        local Elevator = Scriptable and Scriptable:FindFirstChild("Elevator")
+        local ElevatorControl = Elevator and Elevator:FindFirstChild("Control")
+        local ElevatorPrompt = ElevatorControl and ElevatorControl.Button.ProximityPrompt
+
+        if ElevatorPrompt and LastRoom == 204 then
+            while ElevatorPrompt.Enabled do
+                Character:PivotTo(Elevator:GetPivot())
+                fireproximityprompt(ElevatorPrompt)
+                task.wait()
+            end
+
+            for _, Object in Character:GetChildren() do
+                if Object:IsA("BasePart") then
+                    Object.Transparency = Object.Name == "HumanoidRootPart" and 1 or 0
+                end
+            end
+
+            Connection = Connection:Disconnect()
+            return
+        end
+
+        if not Connection then break end
+
+        if Prompt and not FiredPrompts[Prompt] then
+            while Prompt.Enabled do
+                Character:PivotTo(Lever:GetPivot())
+                fireproximityprompt(Prompt)
+                FiredPrompts[Prompt] = true
+                task.wait()
+            end
+        end
+
+        if not Hitbox then continue end
+
+        local _LastRoom = Rooms:FindFirstChild(`Room{LastRoom}`)
+        local _CFrame = _LastRoom:GetPivot() * CFrame.new(0, 150, 0)
+        Character:PivotTo(_CFrame)
+
+        Hitbox.CFrame = _CFrame
+        Hitbox.Size = Vector3.new(2048, 2048, 2048)
+    end
+
+    SpeedRunLabel.Text = `Room {LastRoom}\n{math.floor((os.clock() - SpeedRunStart) * 1000) / 1000}s`
+end)
+
+Rooms.ChildAdded:Connect(function(Child)
+    CollectionService:RemoveTag(Child, "DarkRoom")
+end)
+
+Character:GetAttributeChangedSignal("AutoRotate"):Connect(function()
+    Character:SetAttribute("AutoRotate", true)
+end)
+
+--// Other //
+if type(require) == "function" then
+    local Script = require(Client.CurrentRoomDependency.Modules.Void)
+    Script.VoidPlayer = function() end
+end
+
+local Screech = Client.Values.ScreechActive
+Screech:GetPropertyChangedSignal("Value"):Connect(function()
+    Screech.Value = true
+end)
+Screech.Value = true
+
+workspace:GetPropertyChangedSignal("FallenPartsDestroyHeight"):Connect(function()
+    workspace.FallenPartsDestroyHeight = (0 / 0)
+end)
+workspace.FallenPartsDestroyHeight = (0 / 0)
+
+local Remote = Events.Entities.Stare.RequestIfCanSee
+function Remote.OnClientInvoke()
+    return typeof(workspace:FindFirstChild("Stare")) == "Instance"
+end
+
+local Camera = workspace.CurrentCamera
+Camera:GetPropertyChangedSignal("FieldOfView"):Connect(function()
+    Camera.FieldOfView = 120
+end)
+Camera.FieldOfView = 120
+
+for _, Cutscene in Client.CutsceneHandler.Cutscenes:GetChildren() do
+    if Cutscene.Name == "EndingCutscene" then continue end
+    Cutscene.Parent = nil
+end
