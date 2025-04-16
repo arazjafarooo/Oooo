@@ -1,0 +1,314 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local Window = Rayfield:CreateWindow({
+   Name = "Rayfield Example Window",
+   Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+   LoadingTitle = "Rayfield Interface Suite",
+   LoadingSubtitle = "by Sirius",
+   Theme = "Default", -- Check https://docs.sirius.menu/rayfield/configuration/themes
+
+   DisableRayfieldPrompts = false,
+   DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
+
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = nil, -- Create a custom folder for your hub/game
+      FileName = "Big Hub"
+   },
+
+   Discord = {
+      Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
+      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
+      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+   },
+
+   KeySystem = true, -- Set this to true to use our key system
+   KeySettings = {
+      Title = "Untitled",
+      Subtitle = "Key System",
+      Note = "No method of obtaining the key is provided", -- Use this to tell the user how to get a key
+      FileName = "Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+      Key = {"snakehublollpaid"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+   }
+})
+local Tab = Window:CreateTab("CustomItems", 4483362458) -- Title, Image
+local Section = Tab:CreateSection("Snakeitem")
+Section:Set("legitcustomitems")
+local Divider = Tab:CreateDivider()
+Divider:Set(false) -- Whether the divider's visibility is to be set to true or false.
+Rayfield:Notify({
+   Title = "u logged in!",
+   Content = "welcome back!",
+   Duration = 6.5,
+   Image = 4483362458,
+})
+local Button = Tab:CreateButton({
+   Name = "Mischieviouscrucifix",
+   Callback = function()
+local Tool = game:GetObjects("rbxassetid://76998344598630")[1]
+Tool.Parent = game.Players.LocalPlayer.Backpack
+
+local AnimationsFolder = Tool.Animations
+local Hold = game.Players.LocalPlayer.Character.Humanoid:LoadAnimation(AnimationsFolder.idle)
+
+local mouse = game.Players.LocalPlayer:GetMouse()
+local uis = game:GetService("UserInputService")
+
+local Player = game.Players.LocalPlayer
+local Humanoid = Player.Character:WaitForChild("Humanoid")
+
+local Equipped = false
+
+
+uis.InputBegan:Connect(function(i,a)
+	if i.KeyCode == Enum.KeyCode.Q then
+		if mouse.Target.Parent.ClassName == "Model" then
+			local target = mouse.Target
+
+
+			local highlight = Instance.new("Highlight")
+			highlight.FillTransparency = 1
+			highlight.OutlineTransparency = 1
+			highlight.Parent = target.Parent
+			highlight.FillColor = Color3.new(1, 0.321569, 0.333333)
+
+			target.Anchored = true
+
+			local sound = Instance.new("Sound", game.Workspace)
+			sound.Parent = target
+			sound.SoundId = "rbxassetid://6555668806"
+			sound:Play()
+
+			local light = Instance.new("PointLight", target)
+			light.Brightness = 10
+			light.Color = Color3.new(1, 0.458824, 0.466667)
+			light.Range = 0
+			local particle = Instance.new("ParticleEmitter", target)
+			particle.Size =  NumberSequence.new(4, 4)
+			particle.Speed = NumberRange.new(0,0)
+			particle.Rate = 0
+			particle.Texture = "http://www.roblox.com/asset/?id=74062787660956"
+			particle.Lifetime = NumberRange.new(0.02,0.02)
+			for i = 1,50 do
+				wait()
+				particle.Rate += 5
+			end
+			local number = 00.1
+
+			local sound2 = Instance.new("Sound", target)
+			sound2.Parent = target
+			sound2.SoundId = "rbxassetid://8663054927"
+			sound2.Looped = true
+
+			sound2:Play()
+
+			for i = 1,100 do
+				wait()
+				light.Range += 0.1
+				number += 0.01
+				sound2.PlaybackSpeed += 0.1
+				target.CFrame = target.CFrame * CFrame.new(0, 0, 0) * CFrame.fromEulerAnglesXYZ(0,number, 0) --mess around with these numbers if you want
+			end
+			sound2:Stop()
+			local fullentity = target.Parent:GetChildren()
+
+			for i,v in ipairs(fullentity)  do
+				if v.ClassName == "MeshPart" then
+					v.Anchored = false
+				end
+
+				for i,v in ipairs(fullentity)  do
+					if v.ClassName == "Humanoid" then
+						v.Health = 0
+					end
+				end
+
+				for i,v in ipairs(fullentity)  do
+					if v.ClassName == "Motor6D" then
+						v:Destroy()
+					end
+				end
+
+				local explode = Instance.new("Explosion", game.Workspace)
+				explode.Position = target.Position
+				local sound = Instance.new("Sound", target)
+				sound.SoundId = "rbxassetid://5564340326"
+				sound:Play()
+				local part = Instance.new("Part", game.Workspace)
+				part.Transparency = 1
+				part.CFrame = target.CFrame
+
+				particle.Enabled = false
+				light:Destroy()
+				highlight:Destroy()
+
+				local entity = target.Parent:GetChildren()
+				for i,v in ipairs(entity) do
+					wait()
+					if v.ClassName == "MeshPart" then
+						for i = 1,10 do
+							wait()
+							v.Transparency += 0.1
+						end
+					end
+
+					wait(0.1)
+					target.Parent:Destroy()
+				end
+			end
+		end
+	end
+end)
+
+
+local AnimationsFolder = Tool.Animations
+
+AnimationsFolder.idle.AnimationId = "rbxassetid://10479585177"
+AnimationsFolder.shake.AnimationId = "rbxassetid://12001275923"
+
+
+
+local Hold = Humanoid:LoadAnimation(AnimationsFolder.idle)
+Shake = Humanoid:LoadAnimation(AnimationsFolder.shake)
+
+Tool.Equipped:Connect(function()
+	Equipped = true
+	Hold:Play()
+end)
+
+Tool.Unequipped:Connect(function()
+	Equipped = false
+	Hold:Stop()
+end)
+   -- The function that takes place when the button is pressed
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "chillseek",
+   Callback = function()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/Idk-lol2/chill-seek/refs/heads/main/chillseklal.Pl.txt"))()
+   -- The function that takes place when the button is pressed
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "colored skull key",
+   Callback = function()
+   loadstring(game:HttpGet('https://raw.githubusercontent.com/hi822010/Key-Skeleton-Colored/refs/heads/main/Key%20Skeleton%20Colored'))()
+   -- The function that takes place when the button is pressed
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "smile",
+   Callback = function()
+   loadstring(game:HttpGet('https://pastefy.app/YMa2CPBC/raw'))()
+   -- The function that takes place when the button is pressed
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "magicbook",
+   Callback = function()
+   loadstring(game:HttpGet(("https://raw.githubusercontent.com/IdkMyNameLoll/PublicScripts/refs/heads/main/MagicBookRunner"),true))()
+   -- The function that takes place when the button is pressed
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "guiding Shears",
+   Callback = function()
+   loadstring(game:HttpGet("https://pastebin.com/raw/5gJCt83g"))()
+   -- The function that takes place when the button is pressed
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "seek_crucifix",
+   Callback = function()
+   loadstring(game:HttpGet('https://raw.githubusercontent.com/hi822010/Extras-Gliese-Hub-Doors/refs/heads/main/Seek%20Crucifix'))()
+   -- The function that takes place when the button is pressed
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "glitch scanner",
+   Callback = function()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/Agadigas/Doors/refs/heads/main/Glitched%20Scanner%20by%20Custom%20Doors"))()
+   -- The function that takes place when the button is pressed
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "dread Spawner",
+   Callback = function()
+   -- Hello!
+function DeathHint(args, Color) -- credits to Master Oogway in the kardin hong discord server
+local func, setupval, getinfo, typeof, getgc, next = nil, debug.setupvalue or setupvalue, debug.getinfo or getinfo, typeof, getgc, next
+
+for i,v in next, getgc(false) do
+    if typeof(v) == "function" then
+        local info = getinfo(v)
+        if info.currentline == 54 and info.nups == 2 and info.is_vararg == 0 then
+            func = v
+            break
+        end
+    end
+end
+
+local function Hint(hints, type: string)
+    setupval(func, 1, hints)
+    if type ~= nil then
+        setupval(func, 2, type)
+    end
+end
+
+Hint({
+unpack(args)
+}, Color)
+end
+spawn(function()
+require(game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Modules.Dread)(require(game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game))
+end)
+repeat wait() until game:GetService("Players").LocalPlayer.PlayerGui.MainUI.MainFrame.DreadVignette.Visible == true
+wait(1)
+repeat wait() until game:GetService("Players").LocalPlayer.PlayerGui.MainUI.MainFrame.DreadVignette.ImageColor3 ~= Color3.fromRGB(0,0,0) or not workspace:FindFirstChild('Dread')
+if not workspace:FindFirstChild("Dread") then -- Player went to the next door despawning dread.
+return
+end
+ game:GetService("ReplicatedStorage") .GameStats["Player_".. game.Players.LocalPlayer.Name].Total.DeathCause.Value = "Dread" -- forcing the game to set the entity i died to as "Dread"
+  spawn(function()
+ require(game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Jumpscares.Dread) (require(game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game)) -- Dread Jumpscare
+ end)
+  wait(1)
+  pcall(function()
+  DeathHint({"You died to Dread...", "Try not to stall. Keep moving!"}, "Blue") -- Creating the Death Hint
+end)
+wait(1)
+game.Players.LocalPlayer.Character.Humanoid:TakeDamage(1000) -- Killing the player
+   -- The function that takes place when the button is pressed
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "fuck byjack",
+   Callback = function()
+   -- The function that takes place when the button is pressed
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "Customenity closed",
+   Callback = function()
+   
+   -- The function that takes place when the button is pressed
+   end,
+})
+Button:Set("Custom items and enity")
+local Toggle = Tab:CreateToggle({
+   Name = "Toggle Example",
+   CurrentValue = false,
+   Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+   -- The function that takes place when the toggle is pressed
+   -- The variable (Value) is a boolean on whether the toggle is true or false
+   end,
+})
+Toggle:Set(false)
+local Label = Tab:CreateLabel("custom items And Enity", 4483362458, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
+
+Label:Set("Label Example", 4483362458, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
+local Paragraph = Tab:CreateParagraph({Title = "Paragraph Example", Content = "Bye"})
+Paragraph:Set({Title = "Paragraph Example", Content = "Paragraph Example"})
