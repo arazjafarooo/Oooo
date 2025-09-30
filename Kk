@@ -1,0 +1,5 @@
+local gui = instance.new("screengui")
+gui.name = "super updade :0"
+gui.parent = game.coregui
+local Ui = instance.new("frame")
+ui.position = uDim2.new
