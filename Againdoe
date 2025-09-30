@@ -1,0 +1,133 @@
+-- John Doe Outfit Script by CKbackup
+-- Modified and fixed for Roblox Lua
+
+-- Services
+local Players = game:GetService("Players")
+
+-- Player and Character
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait() -- Wait for character to load
+
+-- Function to create new instances
+local function New(className, parent, name, properties)
+    local instance = Instance.new(className)
+    for property, value in pairs(properties or {}) do
+        instance[property] = value
+    end
+    instance.Parent = parent
+    instance.Name = name
+    return instance
+end
+
+-- Function to apply scatter particle effect
+local function ScatterEff(part)
+    local eff1 = New("ParticleEmitter", part, "ScatterEffect1", {
+        Size = NumberSequence.new(0.1),
+        Transparency = NumberSequence.new({
+            NumberSequenceKeypoint.new(0, 0),
+            NumberSequenceKeypoint.new(0.9, 0),
+            NumberSequenceKeypoint.new(1, 1)
+        }),
+        LightEmission = 1,
+        Lifetime = NumberRange.new(1),
+        Speed = NumberRange.new(1),
+        Rate = 100,
+        SpreadAngle = Vector2.new(360, 360), -- Replaced deprecated VelocitySpread
+        Texture = "rbxassetid://347504241", -- Verify this asset ID
+        Color = ColorSequence.new(Color3.new(1, 0, 0))
+    })
+
+    local eff2 = New("ParticleEmitter", part, "ScatterEffect2", {
+        Size = NumberSequence.new(0.1),
+        Transparency = NumberSequence.new({
+            NumberSequenceKeypoint.new(0, 0),
+            NumberSequenceKeypoint.new(0.9, 0),
+            NumberSequenceKeypoint.new(1, 1)
+        }),
+        LightEmission = 1,
+        Lifetime = NumberRange.new(1),
+        Speed = NumberRange.new(1),
+        Rate = 100,
+        SpreadAngle = Vector2.new(360, 360), -- Replaced deprecated VelocitySpread
+        Texture = "rbxassetid://347504259", -- Verify this asset ID
+        Color = ColorSequence.new(Color3.new(1, 0, 0))
+    })
+end
+
+-- Function to apply burning particle effect
+local function BurningEff(part)
+    local eff1 = New("ParticleEmitter", part, "BurningEffect", {
+        Size = NumberSequence.new(0.1),
+        Transparency = NumberSequence.new({
+            NumberSequenceKeypoint.new(0, 0),
+            NumberSequenceKeypoint.new(0.9, 0),
+            NumberSequenceKeypoint.new(1, 1)
+        }),
+        LightEmission = 1,
+        Lifetime = NumberRange.new(1),
+        Speed = NumberRange.new(1),
+        Rate = 100,
+        SpreadAngle = Vector2.new(360, 360), -- Replaced deprecated VelocitySpread
+        Texture = "rbxassetid://347504241", -- Verify this asset ID
+        Color = ColorSequence.new(Color3.new(1, 0, 0))
+    })
+end
+
+-- Function to modify character appearance
+local function ModifyCharacter()
+    -- Ensure character exists
+    if not character then
+        warn("Character not found!")
+        return
+    end
+
+    -- Get all children of the character
+    local children = character:GetChildren()
+
+    -- Modify character parts
+    for _, child in ipairs(children) do
+        if child.Name == "Torso" and child:IsA("BasePart") then
+            child.Transparency = 1
+        elseif child.Name == "Head" and child:IsA("BasePart") then
+            child.Transparency = 1
+            local face = child:FindFirstChild("face")
+            if face and face:IsA("Decal") then
+                face.Transparency = 1
+            end
+        elseif child:IsA("Accessory") or child:IsA("Shirt") or child:IsA("Pants") or child:IsA("ShirtGraphic") then
+            child:Destroy()
+        end
+    end
+
+    -- Apply BrickColors to body parts
+    local bodyParts = {
+        ["Left Arm"] = "Cool yellow",
+        ["Right Arm"] = "Cool yellow",
+        ["Left Leg"] = "Medium blue",
+        ["Right Leg"] = "Medium blue",
+        ["Torso"] = "Bright yellow"
+    }
+
+    for partName, color in pairs(bodyParts) do
+        local part = character:FindFirstChild(partName)
+        if part and part:IsA("BasePart") then
+            part.BrickColor = BrickColor.new(color)
+        end
+    end
+
+    -- Apply particle effects to Torso (example)
+    local torso = character:FindFirstChild("Torso")
+    if torso and torso:IsA("BasePart") then
+        ScatterEff(torso)
+        BurningEff(torso)
+    end
+end
+
+-- Run the modification
+ModifyCharacter()
+
+-- Handle character respawn
+player.CharacterAdded:Connect(function(newCharacter)
+    character = newCharacter
+    ModifyCharacter()
+end)
